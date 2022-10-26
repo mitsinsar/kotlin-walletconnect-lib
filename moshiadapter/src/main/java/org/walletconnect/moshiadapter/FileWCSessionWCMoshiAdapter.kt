@@ -10,7 +10,7 @@ class FileWCSessionWCMoshiAdapter(moshi: Moshi) : BaseWCMoshiAdapter<Map<String,
         Types.newParameterizedType(
             Map::class.java,
             String::class.java,
-            Any::class.java
+            WCSessionStore.State::class.java
         )
     )
 }

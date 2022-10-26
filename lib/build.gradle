@@ -13,12 +13,6 @@ dependencies {
 
     implementation "org.bouncycastle:bcprov-jdk15to18:${versions.bcprov}"
 
-    implementation "com.google.code.gson:gson:${versions.gson}"
-    implementation "com.squareup.moshi:moshi:${versions.moshi}"
-    // TODO: it would be better to use the generated adapter by moshi
-    // but for that we should move the implementations in different modules
-    //kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
-
     implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
 
     testImplementation "org.assertj:assertj-core:${versions.assertjCore}"

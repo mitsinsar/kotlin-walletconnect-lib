@@ -1,26 +1,20 @@
 package org.walletconnect.impls
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import org.walletconnect.nullOnThrow
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
+import org.walletconnect.nullOnThrow
 
-class FileWCSessionStore(private val storageFile: File, moshi: Moshi) : WCSessionStore {
-    private val adapter = moshi.adapter<Map<String, WCSessionStore.State>>(
-        Types.newParameterizedType(
-            Map::class.java,
-            String::class.java,
-            WCSessionStore.State::class.java
-        )
-    )
+class FileWCSessionStore(
+    private val storageFile: File,
+    private val WCJsonAdapter: WCJsonAdapter<Map<String, WCSessionStore.State>>
+) : WCSessionStore {
 
     private val currentStates: MutableMap<String, WCSessionStore.State> =
         ConcurrentHashMap()
 
     init {
         val storeContent = storageFile.readText()
-        nullOnThrow { adapter.fromJson(storeContent) }?.let {
+        nullOnThrow { WCJsonAdapter.fromJson(storeContent) }?.let {
             currentStates.putAll(it)
         }
     }
@@ -40,7 +34,6 @@ class FileWCSessionStore(private val storageFile: File, moshi: Moshi) : WCSessio
     override fun list(): List<WCSessionStore.State> = currentStates.values.toList()
 
     private fun writeToFile() {
-        storageFile.writeText(adapter.toJson(currentStates))
+        storageFile.writeText(WCJsonAdapter.toJson(currentStates))
     }
-
 }

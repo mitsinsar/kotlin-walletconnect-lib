@@ -1,29 +1,24 @@
 package org.walletconnect.impls
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import okhttp3.*
-import org.walletconnect.Session
-import org.walletconnect.Session.Transport.Status.*
-import java.lang.Exception
-import java.util.*
+import java.util.Queue
 import java.util.concurrent.ConcurrentLinkedQueue
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
+import org.walletconnect.Session
+import org.walletconnect.Session.Transport.Status.Connected
+import org.walletconnect.Session.Transport.Status.Disconnected
+import org.walletconnect.Session.Transport.Status.Error
 
 class OkHttpTransport(
     private val client: OkHttpClient,
     private val serverUrl: String,
     private val statusHandler: (Session.Transport.Status) -> Unit,
     private val messageHandler: (Session.Transport.Message) -> Unit,
-    moshi: Moshi
+    private val adapter: WCJsonAdapter<Map<String, Any>>
 ) : Session.Transport, WebSocketListener() {
-
-    private val adapter = moshi.adapter<Map<String, Any>>(
-        Types.newParameterizedType(
-            Map::class.java,
-            String::class.java,
-            Any::class.java
-        )
-    )
 
     private val socketLock = Any()
     private var socket: WebSocket? = null
@@ -121,15 +116,16 @@ class OkHttpTransport(
         }
     }
 
-    class Builder(val client: OkHttpClient, val moshi: Moshi) :
-        Session.Transport.Builder {
+    class Builder(
+        private val client: OkHttpClient,
+        private val WCJsonAdapter: WCJsonAdapter<Map<String, Any>>
+    ) : Session.Transport.Builder {
         override fun build(
             url: String,
             statusHandler: (Session.Transport.Status) -> Unit,
             messageHandler: (Session.Transport.Message) -> Unit
-        ): Session.Transport =
-            OkHttpTransport(client, url, statusHandler, messageHandler, moshi)
-
+        ): Session.Transport {
+            return OkHttpTransport(client, url, statusHandler, messageHandler, WCJsonAdapter)
+        }
     }
-
 }

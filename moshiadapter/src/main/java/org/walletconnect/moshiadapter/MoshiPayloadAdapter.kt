@@ -1,9 +1,10 @@
-package org.walletconnect.impls
+package org.walletconnect.moshiadapter
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import org.walletconnect.EncryptedPayload
 import org.walletconnect.Session
+import org.walletconnect.impls.BasePayloadAdapter
 
 class MoshiPayloadAdapter(moshi: Moshi) : BasePayloadAdapter() {
 

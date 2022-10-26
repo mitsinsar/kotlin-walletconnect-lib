@@ -1,2 +1,4 @@
 include ':lib' //, ':sample:app'
 
+// include ':gsonadapter'
+// include ':moshiadapter'

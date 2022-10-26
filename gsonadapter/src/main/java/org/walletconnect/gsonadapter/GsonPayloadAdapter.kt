@@ -1,9 +1,10 @@
-package org.walletconnect.impls
+package org.walletconnect.gsonadapter
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.walletconnect.EncryptedPayload
 import org.walletconnect.Session
+import org.walletconnect.impls.BasePayloadAdapter
 
 class GsonPayloadAdapter(private val gson: Gson) : BasePayloadAdapter() {
 

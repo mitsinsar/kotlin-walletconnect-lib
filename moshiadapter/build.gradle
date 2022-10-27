@@ -16,7 +16,7 @@ android {
 dependencies {
     api project(path: ':lib')
 
-    implementation "com.squareup.moshi:moshi:1.14.0"
+    implementation "com.squareup.moshi:moshi:${versions.moshi}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
 }
 repositories {

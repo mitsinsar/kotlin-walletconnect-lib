@@ -16,7 +16,7 @@ android {
 dependencies {
     api project(path: ':lib')
 
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation "com.google.code.gson:gson:${versions.gson}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
 }
 repositories {

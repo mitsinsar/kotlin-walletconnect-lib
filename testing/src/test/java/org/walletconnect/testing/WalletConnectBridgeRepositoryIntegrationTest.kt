@@ -1,27 +1,34 @@
-package org.walletconnect
+package org.walletconnect.testing
 
 import com.squareup.moshi.Moshi
-import okhttp3.OkHttpClient
-import org.junit.Test
-import org.walletconnect.impls.FileWCSessionStore
-import org.walletconnect.impls.MoshiPayloadAdapter
-import org.walletconnect.impls.OkHttpTransport
-import org.walletconnect.impls.WCSession
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
+import okhttp3.OkHttpClient
+import org.walletconnect.Session
+import org.walletconnect.impls.FileWCSessionStore
+import org.walletconnect.impls.OkHttpTransport
+import org.walletconnect.impls.WCSession
+import org.walletconnect.moshiadapter.FileWCSessionWCMoshiAdapter
+import org.walletconnect.moshiadapter.MoshiPayloadAdapter
+import org.walletconnect.moshiadapter.OkHttpTransportWCMoshiAdapter
 
 class WalletConnectBridgeRepositoryIntegrationTest {
-
 
     /**
      * Integration test that can be used with the wallet connect example dapp
      */
-    //@Test
+//    @Test
     fun approveSession() {
         val client = OkHttpClient.Builder().pingInterval(1000, TimeUnit.MILLISECONDS).build()
-        val moshi = Moshi.Builder().build()
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
         val sessionDir = File("build/tmp/").apply { mkdirs() }
-        val sessionStore = FileWCSessionStore(File(sessionDir, "test_store.json").apply { createNewFile() }, moshi)
+        val sessionStore = FileWCSessionStore(
+            File(sessionDir, "test_store.json").apply { createNewFile() },
+            FileWCSessionWCMoshiAdapter(moshi)
+        )
         val uri =
             "wc:ffd70e47-8634-4eba-95e9-81d7d1ee3bc3@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=10d842ec755f67ed37de894811d2b641e1e752f3a91cec05d64ed4b7735cb8c3"
 
@@ -30,7 +37,7 @@ class WalletConnectBridgeRepositoryIntegrationTest {
             config,
             MoshiPayloadAdapter(moshi),
             sessionStore,
-            OkHttpTransport.Builder(client, moshi),
+            OkHttpTransport.Builder(client, OkHttpTransportWCMoshiAdapter(moshi)),
             Session.PeerMeta(name = "WC Unit Test")
         )
 
@@ -51,4 +58,3 @@ class WalletConnectBridgeRepositoryIntegrationTest {
         Thread.sleep(2000)
     }
 }
-

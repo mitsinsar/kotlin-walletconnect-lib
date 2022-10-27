@@ -1,15 +1,8 @@
-package org.walletconnect
+package org.walletconnect.testing
 
-import com.squareup.moshi.Moshi
-import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.walletconnect.impls.FileWCSessionStore
-import org.walletconnect.impls.MoshiPayloadAdapter
-import org.walletconnect.impls.OkHttpTransport
-import org.walletconnect.impls.WCSession
-import java.io.File
-import java.util.concurrent.TimeUnit
+import org.walletconnect.Session
 
 class TheUriParser {
 
